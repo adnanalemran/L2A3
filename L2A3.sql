@@ -153,3 +153,77 @@ VALUES
   (504, 2, 101, NULL, NULL, 150.00),
   (505, 3, 102, 'C-20', 'Pending', 120.00);
 
+
+
+-- =========================================================================
+-- Part 2: SQL Queries & Expected
+-- =========================================================================
+
+-- Query 1
+select
+  *
+from
+  matches
+where
+  tournament_category = 'Champions League'
+  and match_status = 'Available';
+
+-- Query 2
+select
+  *
+from
+  users
+where
+  full_name ilike 'Tanvir%'
+  or full_name ilike '%Haque%';
+
+-- Query 3
+select
+  booking_id,
+  user_id,
+  match_id,
+  seat_number,
+  COALESCE(payment_status, 'Action Required') AS payment_status,
+  total_cost
+from
+  bookings
+WHERE
+  payment_status IS NULL;
+
+-- Query 4
+select
+  b.booking_id,
+  b.booking_id,
+  u.full_name,
+  m.fixture,
+  b.total_cost
+from
+  bookings b
+  inner join users u on b.user_id = u.user_id
+  inner join matches m on b.match_id = m.match_id
+order by
+  b.booking_id;
+
+-- Query 5
+SELECT 
+  u.user_id,
+  u.full_name,
+  b.booking_id
+FROM Users u
+LEFT JOIN Bookings b
+  ON u.user_id = b.user_id
+ORDER BY u.user_id;
+
+-- Query 6
+SELECT booking_id,match_id,total_cost
+FROM Bookings
+WHERE total_cost > (
+  SELECT AVG(total_cost)
+  FROM Bookings
+);
+-- Query 7
+SELECT match_id,fixture, base_ticket_price::INT AS base_ticket_price
+FROM Matches
+ORDER BY base_ticket_price DESC
+OFFSET 1
+LIMIT 2;
